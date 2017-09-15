@@ -1,0 +1,76 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.jakewharton.butterknife'
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+//dependencies {
+//    compile fileTree(dir: 'libs', include: ['*.jar'])
+//    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+//        exclude group: 'com.android.support', module: 'support-annotations'
+//    })
+//    compile 'com.android.support:appcompat-v7:26.+'
+//    testCompile 'junit:junit:4.12'
+//}
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile rootProject.ext.dependencies["retrofit2"]
+    compile rootProject.ext.dependencies["retrofit2-gson"]
+    compile rootProject.ext.dependencies["appcompat-v7"]
+    compile rootProject.ext.dependencies["constraint-layout"]
+    compile rootProject.ext.dependencies["butterknife"]
+    compile rootProject.ext.dependencies["logger"]
+    // compile rootProject.ext.dependencies["stetho"]
+    // debugCompile rootProject.ext.dependencies["leakcanary"]
+    // releaseCompile rootProject.ext.dependencies["leakcanary-release"]
+    // testCompile rootProject.ext.dependencies["leakcanary-release"]
+    compile rootProject.ext.dependencies["materialish-progress"]
+    compile rootProject.ext.dependencies["glide"]
+    compile rootProject.ext.dependencies["circleimageview"]
+    annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
+    // compile rootProject.ext.dependencies["dagger"]
+    // annotationProcessor rootProject.ext.dependencies["dagger-compiler"]
+    testCompile rootProject.ext.dependencies["test-junit"]
+    //compile rootProject.ext.dependencies["inject"]
+    compile rootProject.ext.dependencies["Toasty"]
+    compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    //下拉刷新
+    compile 'com.baoyz.pullrefreshlayout:library:1.2.0'
+    //jsonbean
+    compile 'com.kevin:jsontool:1.0.0'
+    //爆炸删除
+    compile 'tyrantgit:explosionfield:1.0.1'
+    //加载狂
+    compile 'com.victor:lib:1.0.4'
+    //gifview
+    compile 'com.github.Cutta:GifView:1.1'
+    // ikjplayer
+    compile 'com.shuyu:gsyVideoPlayer-java:2.0.4'
+
+    compile 'com.shuyu:gsyVideoPlayer-ex_so:2.0.4'
+    //高德lbs
+    compile 'com.amap.api:location:latest.integration'
+    //Log
+    compile 'com.orhanobut:logger:2.1.1'
+}
