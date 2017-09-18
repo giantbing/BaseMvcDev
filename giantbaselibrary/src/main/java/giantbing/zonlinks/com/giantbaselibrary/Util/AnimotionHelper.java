@@ -3,7 +3,9 @@ package giantbing.zonlinks.com.giantbaselibrary.Util;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.transition.Explode;
 import android.transition.Fade;
 import android.transition.Slide;
@@ -34,50 +36,63 @@ public class AnimotionHelper {
 
     private static void initExplodeTransition(Context context) {
         // 设置一个 enter transition
-        ((Activity)context).getWindow().setEnterTransition(new Explode().setDuration(TRANSITION_DURATION));
-        // 设置一个 exit transition
-        ((Activity)context).getWindow().setExitTransition(new Explode());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ((Activity)context).getWindow().setEnterTransition(new Explode().setDuration(TRANSITION_DURATION));
+            // 设置一个 exit transition
+            ((Activity)context).getWindow().setExitTransition(new Explode());
+        }
+
     }
 
     private static void initSlideTransition(Context context) {
         // 设置一个 enter transition
-        ((Activity)context).getWindow().setEnterTransition(new Slide().setDuration(TRANSITION_DURATION));
-        // 设置一个 exit transition
-        ((Activity)context).getWindow().setExitTransition(new Slide());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ((Activity)context).getWindow().setEnterTransition(new Slide().setDuration(TRANSITION_DURATION));
+            // 设置一个 exit transition
+            ((Activity)context).getWindow().setExitTransition(new Slide());
+        }
+
     }
 
     private static void initFadeTransition(Context context) {
         // 设置一个 enter transition
-        ((Activity)context).getWindow().setEnterTransition(new Fade().setDuration(TRANSITION_DURATION));
-        // 设置一个 exit transition
-        ((Activity)context).getWindow().setExitTransition(new Fade());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ((Activity)context).getWindow().setEnterTransition(new Fade().setDuration(TRANSITION_DURATION));
+            // 设置一个 exit transition
+            ((Activity)context).getWindow().setExitTransition(new Fade());
+        }
+
     }
 
     private static void initShareElementTransition(Context context) {
         // 共享元素 Transition 的 enter 效果
-        ((Activity)context).getWindow().setSharedElementEnterTransition(new Slide().setDuration(TRANSITION_DURATION));
-        // 共享元素 Transition 的 exit 效果
-        ((Activity)context).getWindow().setSharedElementExitTransition(new Slide().setDuration(TRANSITION_DURATION));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ((Activity)context).getWindow().setSharedElementEnterTransition(new Slide().setDuration(TRANSITION_DURATION));
+            // 共享元素 Transition 的 exit 效果
+            ((Activity)context).getWindow().setSharedElementExitTransition(new Slide().setDuration(TRANSITION_DURATION));
+        }
+
     }
 
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static Bundle explodebundle(Context context) {
         initExplodeTransition(context);
         return   ActivityOptions.makeSceneTransitionAnimation((Activity)context).toBundle();
     }
-
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static Bundle slidebundle(Context context) {
         initSlideTransition(context);
         return   ActivityOptions.makeSceneTransitionAnimation((Activity)context).toBundle();
     }
-
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static Bundle fadebundle(Context context) {
         initFadeTransition(context);
         return   ActivityOptions.makeSceneTransitionAnimation((Activity)context).toBundle();
     }
-
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static Bundle sharedelementsbundle(Context context, View view , String shareName) {
         initShareElementTransition(context);
         // shareView: 需要共享的视图
