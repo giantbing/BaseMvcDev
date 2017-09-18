@@ -11,9 +11,11 @@ import giantbing.zonlinks.com.giantbaselibrary.BuildConfig;
  */
 
 public class LogUtil {
-    private static final String TAG = "2333+util\t";
-    private static final boolean DEBUG = BuildConfig.DEBUG;
+    private static  boolean DEBUG = true ;
     private static boolean isInit = false;
+    public static void setDEBUG(boolean DEBUG) {
+        LogUtil.DEBUG = DEBUG;
+    }
 
     private static void initLog() {
         if (isInit) return;
@@ -21,75 +23,100 @@ public class LogUtil {
         isInit = true;
     }
 
-    public static void i(Object... msg) {
+    public static void v(Object msg) {
         if (DEBUG) {
             initLog();
-            Logger.i(TAG, msg);
-            //android.util.Log.i(TAG, msg);
+            Logger.v(msg.toString(), msg);
         }
 
     }
 
-    public static void i(String msg, Object... data) {
+    public static void w(String msg) {
         if (DEBUG) {
             initLog();
-            Logger.i(msg, data);
-            //android.util.Log.i(TAG, msg);
+            Logger.w(msg);
         }
 
     }
-
-    public static void e(Object... msg) {
+    public static void d(String message, Object... args) {
         if (DEBUG) {
             initLog();
-            Logger.e(TAG, msg);
+            Logger.d(message, args);
         }
+    }
+
+    public static void d(Object object) {
+        if (DEBUG) {
+            initLog();
+            Logger.d(object);
+        }
+
     }
 
     public static void e(String message, Object... args) {
         if (DEBUG) {
             initLog();
-            Logger.e(message, args);
+            Logger.e(null, message, args);
         }
     }
 
     public static void e(Throwable throwable, String message, Object... args) {
         if (DEBUG) {
             initLog();
-            Logger.e(throwable, TAG, args);
+            Logger.e(throwable, message, args);
         }
     }
 
-    public static void d(Object... msg) {
+    public static void i(String message, Object... args) {
         if (DEBUG) {
             initLog();
-            Logger.d(TAG, msg);
+            Logger.i(message, args);
         }
-
     }
 
-    public static void d(String msg, Object... args) {
+    public static void v(String message, Object... args) {
         if (DEBUG) {
             initLog();
-            Logger.d(msg, args);
+            Logger.v(message, args);
         }
-
     }
 
-    public static void v(Object msg) {
+    public static void w(String message, Object... args) {
         if (DEBUG) {
             initLog();
-            Logger.v(TAG, msg);
+            Logger.w(message, args);
         }
-
     }
-
-    public static void w(Object msg) {
+    /**
+     * Tip: Use this for exceptional situations to log
+     * ie: Unexpected errors etc
+     */
+    public static void wtf(String message, Object... args) {
         if (DEBUG) {
             initLog();
-            Logger.w(TAG, msg);
+            Logger.wtf(message, args);
         }
 
     }
 
+    /**
+     * Formats the given json content and print it
+     */
+    public static void json(String json) {
+        if (DEBUG) {
+            initLog();
+            Logger.json(json);
+        }
+
+    }
+
+    /**
+     * Formats the given xml content and print it
+     */
+    public static void xml(String xml) {
+        if (DEBUG) {
+            initLog();
+            Logger.xml(xml);
+        }
+    }
 }

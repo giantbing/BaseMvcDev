@@ -73,4 +73,6 @@ dependencies {
     compile 'com.amap.api:location:latest.integration'
     //Log
     compile 'com.orhanobut:logger:2.1.1'
+    //Bus
+    compile 'org.greenrobot:eventbus:3.0.0'
 }

@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by P on 2017/9/15.
  */
@@ -32,11 +34,13 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ButterKnife.bind(this);
         initInnerData();
         initVariables();
         initView();
         initClick();
         loadData();
+
     }
 
     @Override
@@ -58,4 +62,23 @@ public abstract class BaseActivity extends Activity {
         mHandler = null;
         mPrefs = null;
     }
+//    @Override
+//    public void setContentView(@LayoutRes int layoutResID) {
+//        super.setContentView(layoutResID);
+//        ButterKnife.bind(this);
+//
+//    }
+//
+//
+//    @Override
+//    public void setContentView(View view) {
+//        super.setContentView(view);
+//        ButterKnife.bind(this);
+//    }
+//
+//    @Override
+//    public void setContentView(View view, ViewGroup.LayoutParams params) {
+//        super.setContentView(view, params);
+//        ButterKnife.bind(this);
+//    }
 }

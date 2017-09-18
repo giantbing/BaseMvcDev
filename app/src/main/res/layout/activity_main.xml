@@ -7,5 +7,13 @@
         android:id="@+id/fbv_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
+    <TextView
+        android:id="@+id/event_text"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:background="@color/colorPrimary"
+        android:layout_centerInParent="true"
+        android:text="点我"
+        android:gravity="center"
+        android:textColor="#ffffff"/>
 </RelativeLayout>
