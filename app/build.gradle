@@ -50,6 +50,9 @@ android {
         compile 'org.greenrobot:eventbus:3.0.0'
         compile rootProject.ext.dependencies["butterknife"]
         annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
+        compile 'com.squareup.retrofit2:adapter-rxjava2:+'
+        compile rootProject.ext.dependencies["rxjava"]
+        compile rootProject.ext.dependencies["rxandroid"]
     }
 }
 

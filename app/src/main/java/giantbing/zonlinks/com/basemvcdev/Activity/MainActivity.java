@@ -9,7 +9,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
-import giantbing.zonlinks.com.basemvcdev.BuildConfig;
+import giantbing.zonlinks.com.basemvcdev.Bean.WetherBean;
+import giantbing.zonlinks.com.basemvcdev.Http.HttpCilent;
 import giantbing.zonlinks.com.basemvcdev.R;
 import giantbing.zonlinks.com.basemvcdev.Event.ActivityEvent;
 import giantbing.zonlinks.com.giantbaselibrary.Util.ActivityUtil;
@@ -17,6 +18,10 @@ import giantbing.zonlinks.com.giantbaselibrary.Util.LogUtil;
 import giantbing.zonlinks.com.giantbaselibrary.Util.ToastHelper;
 import giantbing.zonlinks.com.giantbaselibrary.View.BubbleDrawer;
 import giantbing.zonlinks.com.giantbaselibrary.View.FloatBubbleView;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppBaseActivity {
     @BindView(R.id.fbv_main)
@@ -69,6 +74,7 @@ public class MainActivity extends AppBaseActivity {
                         return CodeEnum.toPage;
                     }
                 });
+                getWetherData();
             }
         });
     }
@@ -103,5 +109,17 @@ public class MainActivity extends AppBaseActivity {
         super.onDestroy();
         fbvMain.onDrawDestroy();
         EventBus.getDefault().unregister(this);
+    }
+    private void getWetherData(){
+        HttpCilent.getWether("chengdu")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<WetherBean>() {
+                    @Override
+                    public void accept(WetherBean wetherBean) throws Exception {
+                        eventText.setText(wetherBean.getResults().get(0).getNow().getTemperature());
+                        LogUtil.d(wetherBean);
+                    }
+                });
     }
 }
