@@ -36,7 +36,6 @@ public class LoadDialog {
             dialog = new Dialog(context, R.style.Loading);
         dialog.dismiss();
         View view = View.inflate(context, R.layout.load_dialog, null);
-        if (holder==null)
         dialog.setCancelable(false);
         dialog.setContentView(view);
         dialog.show();

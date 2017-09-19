@@ -18,13 +18,9 @@
         <!-- 设置是否显示背景 -->
         <item name="android:backgroundDimEnabled">true</item>
         <!-- 设置背景透明度 -->
-        <item name="android:backgroundDimAmount">0</item>
+        <item name="android:backgroundDimAmount">0.5</item>
         <!-- 设置点击空白是否消失 -->
         <item name="android:windowCloseOnTouchOutside">false</item>
     </style>
 </resources>
-<!--<resources>-->
-    <!--<style name="AppBaseTheme" parent="android:Theme.Light"></style>-->
-    <!--<style name="AppTheme" parent="AppBaseTheme"></style>-->
-<!--</resources>-->
 

@@ -7,9 +7,13 @@ import android.widget.TextView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import giantbing.zonlinks.com.basemvcdev.Bean.WetherBean;
+import giantbing.zonlinks.com.basemvcdev.Http.Base.ProgressSubscriber;
 import giantbing.zonlinks.com.basemvcdev.Http.HttpCilent;
 import giantbing.zonlinks.com.basemvcdev.R;
 import giantbing.zonlinks.com.basemvcdev.Event.ActivityEvent;
@@ -18,10 +22,14 @@ import giantbing.zonlinks.com.giantbaselibrary.Util.LogUtil;
 import giantbing.zonlinks.com.giantbaselibrary.Util.ToastHelper;
 import giantbing.zonlinks.com.giantbaselibrary.View.BubbleDrawer;
 import giantbing.zonlinks.com.giantbaselibrary.View.FloatBubbleView;
+import io.reactivex.Observer;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DisposableSubscriber;
+import io.reactivex.subscribers.SafeSubscriber;
 
 public class MainActivity extends AppBaseActivity {
     @BindView(R.id.fbv_main)
@@ -42,15 +50,12 @@ public class MainActivity extends AppBaseActivity {
 
     @Override
     protected void loadData() {
-        loadDialog.showLoadDialog(MainActivity.this);
         //设置气泡绘制者
         BubbleDrawer bubbleDrawer = new BubbleDrawer(this);
         //设置渐变背景 如果不需要渐变 设置相同颜色即可
         bubbleDrawer.setBackgroundGradient(new int[]{0xffffffff, 0xffffffff});
         //给SurfaceView设置一个绘制者
         fbvMain.setDrawer(bubbleDrawer);
-
-        loadDialog.dismiss();
     }
 
     @Override
@@ -88,8 +93,10 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
-
         super.onCreate(savedInstanceState);
+
+
+
     }
 
     @Override
@@ -111,15 +118,12 @@ public class MainActivity extends AppBaseActivity {
         EventBus.getDefault().unregister(this);
     }
     private void getWetherData(){
-        HttpCilent.getWether("chengdu")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<WetherBean>() {
-                    @Override
-                    public void accept(WetherBean wetherBean) throws Exception {
-                        eventText.setText(wetherBean.getResults().get(0).getNow().getTemperature());
-                        LogUtil.d(wetherBean);
-                    }
-                });
+        HttpCilent.getInstance().getWether("chengdu", MainActivity.this, loadDialog, new ProgressSubscriber<WetherBean>(loadDialog) {
+            @Override
+            public void handlerSuccess(WetherBean wetherBean) {
+                LogUtil.wtf("2333");
+            }
+        });
+
     }
 }

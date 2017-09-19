@@ -7,8 +7,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 
+import butterknife.ButterKnife;
 import giantbing.zonlinks.com.basemvcdev.BuildConfig;
+import giantbing.zonlinks.com.basemvcdev.Util.DialogUtil;
 import giantbing.zonlinks.com.basemvcdev.View.LoadDialog;
+import giantbing.zonlinks.com.basemvcdev.View.ProgressDialog;
 import giantbing.zonlinks.com.giantbaselibrary.Activity.BaseActivity;
 import giantbing.zonlinks.com.giantbaselibrary.Util.LogUtil;
 
@@ -18,11 +21,11 @@ import giantbing.zonlinks.com.giantbaselibrary.Util.LogUtil;
 
 public abstract class AppBaseActivity extends BaseActivity {
 
-    protected LoadDialog loadDialog;
+    protected ProgressDialog loadDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        LogUtil.setDEBUG(BuildConfig.DEBUG);
+        loadDialog = DialogUtil.getProgressInstance(AppBaseActivity.this);
         super.onCreate(savedInstanceState);
     }
 
@@ -31,6 +34,4 @@ public abstract class AppBaseActivity extends BaseActivity {
         loadDialog = null;
         super.onDestroy();
     }
-
-
 }

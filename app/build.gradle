@@ -53,6 +53,7 @@ android {
         compile 'com.squareup.retrofit2:adapter-rxjava2:+'
         compile rootProject.ext.dependencies["rxjava"]
         compile rootProject.ext.dependencies["rxandroid"]
+        compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     }
 }
 
