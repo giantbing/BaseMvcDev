@@ -1,17 +1,15 @@
 package giantbing.zonlinks.com.basemvcdev.Activity;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import giantbing.zonlinks.com.basemvcdev.Bean.WetherBean;
 import giantbing.zonlinks.com.basemvcdev.Http.Base.ProgressSubscriber;
 import giantbing.zonlinks.com.basemvcdev.Http.HttpCilent;
@@ -22,20 +20,14 @@ import giantbing.zonlinks.com.giantbaselibrary.Util.LogUtil;
 import giantbing.zonlinks.com.giantbaselibrary.Util.ToastHelper;
 import giantbing.zonlinks.com.giantbaselibrary.View.BubbleDrawer;
 import giantbing.zonlinks.com.giantbaselibrary.View.FloatBubbleView;
-import io.reactivex.Observer;
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subscribers.DisposableSubscriber;
-import io.reactivex.subscribers.SafeSubscriber;
 
 public class MainActivity extends AppBaseActivity {
     @BindView(R.id.fbv_main)
     FloatBubbleView fbvMain;
     @BindView(R.id.event_text)
     TextView eventText;
+
+    private boolean isDown = false;
 
     @Override
     protected void initVariables() {
@@ -86,15 +78,14 @@ public class MainActivity extends AppBaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(ActivityEvent event) {
-        LogUtil.d(event.getCode().getObjects().toString(),event);
-        ToastHelper.error(MainActivity.this,event.getCode()+"");
+        LogUtil.d(event.getCode().getObjects().toString(), event);
+        ToastHelper.error(MainActivity.this, event.getCode() + "");
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
-
 
 
     }
@@ -117,13 +108,36 @@ public class MainActivity extends AppBaseActivity {
         fbvMain.onDrawDestroy();
         EventBus.getDefault().unregister(this);
     }
-    private void getWetherData(){
-        HttpCilent.getInstance().getWether("chengdu", MainActivity.this, loadDialog, new ProgressSubscriber<WetherBean>(loadDialog) {
-            @Override
-            public void handlerSuccess(WetherBean wetherBean) {
-                LogUtil.wtf("2333");
-            }
-        });
 
+    private void getWetherData() {
+        HttpCilent.getInstance().getWether("chengdu", MainActivity.this, loadDialog)
+                .subscribeWith(new ProgressSubscriber<WetherBean>(loadDialog) {
+                    @Override
+                    public void handlerSuccess(WetherBean wetherBean) {
+                        LogUtil.wtf("2333");
+                    }
+                });
+
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (isDown) {
+                this.finish();
+                System.exit(0);
+            } else {
+                isDown = true;
+                ToastHelper.info(getApplicationContext(), "再按一次退出");
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        isDown = false;
+                    }
+                }, 2000);
+            }
+        }
+        return false;
     }
 }

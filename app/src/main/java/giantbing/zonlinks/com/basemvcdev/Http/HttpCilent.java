@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import giantbing.zonlinks.com.basemvcdev.Bean.WetherBean;
 import giantbing.zonlinks.com.basemvcdev.View.ProgressDialog;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.Scheduler;
@@ -69,12 +70,11 @@ public class HttpCilent {
         return sinalInstance.instance;
     }
 
-    public void getWether(String location,  Context context, ProgressDialog dialog, DisposableSubscriber<WetherBean> observer) {
-        apiService.getStudent(key,location)
+    public Flowable<WetherBean> getWether(String location, Context context, ProgressDialog dialog) {
+       return apiService.getStudent(key,location)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
-                .compose(RxSchedulers.<WetherBean>io_main(context, dialog))
-                .subscribeWith(observer);
+                .compose(RxSchedulers.<WetherBean>io_main(context, dialog));
 
     }
 

@@ -1,5 +1,6 @@
 package giantbing.zonlinks.com.basemvcdev.Http;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.provider.SyncStateContract;
@@ -63,15 +64,19 @@ public class RxSchedulers {
                                     subscription.cancel();
                                 } else {
                                     //启动进度显示，取消进度时会取消请求
-                                    if (dialog != null) {
-                                        dialog.setCanceledOnTouchOutside(false);
-                                        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                            @Override public void onCancel(DialogInterface dialog) {
-                                                subscription.cancel();
-                                            }
-                                        });
-                                        dialog.show();
+
+                                        //show dialog
+                                        if (dialog != null) {
+                                            dialog.setCanceledOnTouchOutside(false);
+                                            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                                @Override public void onCancel(DialogInterface dialog) {
+                                                    subscription.cancel();
+                                                }
+                                            });
+                                            dialog.show();
+
                                     }
+
                                 }
                             }
                         })
