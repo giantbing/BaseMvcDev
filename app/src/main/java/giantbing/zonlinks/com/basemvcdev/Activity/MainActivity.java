@@ -20,12 +20,14 @@ import giantbing.zonlinks.com.giantbaselibrary.Util.LogUtil;
 import giantbing.zonlinks.com.giantbaselibrary.Util.ToastHelper;
 import giantbing.zonlinks.com.giantbaselibrary.View.BubbleDrawer;
 import giantbing.zonlinks.com.giantbaselibrary.View.FloatBubbleView;
+import tyrantgit.explosionfield.ExplosionField;
 
 public class MainActivity extends AppBaseActivity {
     @BindView(R.id.fbv_main)
     FloatBubbleView fbvMain;
     @BindView(R.id.event_text)
     TextView eventText;
+    ExplosionField field;
 
     private boolean isDown = false;
 
@@ -37,7 +39,7 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void initView() {
         ActivityUtil.setTranSlucent(MainActivity.this);
-
+        field = ExplosionField.attach2Window(this);
     }
 
     @Override
@@ -52,7 +54,8 @@ public class MainActivity extends AppBaseActivity {
 
     @Override
     protected void destroyView() {
-
+        fbvMain.onDrawDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -65,6 +68,7 @@ public class MainActivity extends AppBaseActivity {
         eventText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                field.explode(view);
                 EventBus.getDefault().post(new ActivityEvent() {
                     @Override
                     public CodeEnum getCode() {
@@ -105,8 +109,7 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        fbvMain.onDrawDestroy();
-        EventBus.getDefault().unregister(this);
+
     }
 
     private void getWetherData() {
@@ -115,6 +118,8 @@ public class MainActivity extends AppBaseActivity {
                     @Override
                     public void handlerSuccess(WetherBean wetherBean) {
                         LogUtil.wtf("2333");
+
+                        field.clear();
                     }
                 });
 
