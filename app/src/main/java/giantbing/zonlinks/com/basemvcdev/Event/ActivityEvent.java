@@ -8,6 +8,7 @@ import java.util.Objects;
 
 public abstract class ActivityEvent {
     public abstract CodeEnum getCode();
+
     public enum CodeEnum{
         toPage(0,"asd");
         private int code;

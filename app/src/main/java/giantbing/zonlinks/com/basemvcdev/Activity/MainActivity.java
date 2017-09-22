@@ -15,11 +15,20 @@ import giantbing.zonlinks.com.basemvcdev.Http.Base.ProgressSubscriber;
 import giantbing.zonlinks.com.basemvcdev.Http.HttpCilent;
 import giantbing.zonlinks.com.basemvcdev.R;
 import giantbing.zonlinks.com.basemvcdev.Event.ActivityEvent;
+import giantbing.zonlinks.com.basemvcdev.Util.AppUtils;
+import giantbing.zonlinks.com.basemvcdev.Util.StartActivityHelper;
 import giantbing.zonlinks.com.giantbaselibrary.Util.ActivityUtil;
+import giantbing.zonlinks.com.giantbaselibrary.Util.AnimotionHelper;
 import giantbing.zonlinks.com.giantbaselibrary.Util.LogUtil;
 import giantbing.zonlinks.com.giantbaselibrary.Util.ToastHelper;
 import giantbing.zonlinks.com.giantbaselibrary.View.BubbleDrawer;
 import giantbing.zonlinks.com.giantbaselibrary.View.FloatBubbleView;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import tyrantgit.explosionfield.ExplosionField;
 
 public class MainActivity extends AppBaseActivity {
@@ -32,8 +41,14 @@ public class MainActivity extends AppBaseActivity {
     private boolean isDown = false;
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     protected void initVariables() {
-        EventBus.getDefault().register(this);
+
     }
 
     @Override
@@ -68,31 +83,16 @@ public class MainActivity extends AppBaseActivity {
         eventText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // StartActivityHelper.startActivityTraslate(MainActivity.this,WheatherActivity.class, StartActivityHelper.Anmotion.Slide);
+                //AppUtils.uninstallDataAPPBySilent(getApplicationContext(), "com.zonlinks.giantbing.guangzhouboard");
+                unstall("com.zonlinks.giantbing.guangzhouboard");
                 field.explode(view);
-                EventBus.getDefault().post(new ActivityEvent() {
-                    @Override
-                    public CodeEnum getCode() {
-                        return CodeEnum.toPage;
-                    }
-                });
                 getWetherData();
+
             }
         });
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(ActivityEvent event) {
-        LogUtil.d(event.getCode().getObjects().toString(), event);
-        ToastHelper.error(MainActivity.this, event.getCode() + "");
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_main);
-        super.onCreate(savedInstanceState);
-
-
-    }
 
     @Override
     protected void onResume() {
@@ -109,19 +109,6 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-    }
-
-    private void getWetherData() {
-        HttpCilent.getInstance().getWether("chengdu", MainActivity.this, loadDialog)
-                .subscribeWith(new ProgressSubscriber<WetherBean>(loadDialog) {
-                    @Override
-                    public void handlerSuccess(WetherBean wetherBean) {
-                        LogUtil.wtf("2333");
-
-                        field.clear();
-                    }
-                });
 
     }
 
@@ -145,4 +132,38 @@ public class MainActivity extends AppBaseActivity {
         }
         return false;
     }
+
+
+    private void getWetherData() {
+        HttpCilent.getInstance().getWether("chengdu", MainActivity.this, loadDialog);
+
+    }
+
+    private void unstall(String packageName) {
+        AppUtils.unInstall(getApplicationContext(), packageName)
+                .subscribe(new Consumer<AppUtils.uninstallEnum>() {
+                               @Override
+                               public void accept(AppUtils.uninstallEnum aBoolean) throws Exception {
+                                  switch (aBoolean){
+                                      case NOROOT:
+                                          ToastHelper.warning(getApplicationContext(),"没有ROOT权限，尝试手动删除！");
+                                          break;
+                                      case SUCCESS:
+                                          ToastHelper.success(getApplicationContext(),"卸载成功！");
+                                          break;
+                                      case UNKOWPACAGE:
+                                          ToastHelper.warning(getApplicationContext(),"未安装！");
+                                          break;
+                                  }
+                               }
+                           },
+                        new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                ToastHelper.error(MainActivity.this, throwable.toString());
+                                LogUtil.e(throwable.toString());
+                            }
+                        });
+    }
+
 }

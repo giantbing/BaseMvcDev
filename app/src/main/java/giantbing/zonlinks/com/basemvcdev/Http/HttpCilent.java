@@ -6,12 +6,18 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import org.greenrobot.eventbus.EventBus;
 import org.reactivestreams.Subscriber;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import giantbing.zonlinks.com.basemvcdev.Bean.WetherBean;
+import giantbing.zonlinks.com.basemvcdev.C;
+import giantbing.zonlinks.com.basemvcdev.Http.Base.BaseSubscriber;
+import giantbing.zonlinks.com.basemvcdev.Http.Base.ProgressSubscriber;
 import giantbing.zonlinks.com.basemvcdev.View.ProgressDialog;
+import giantbing.zonlinks.com.giantbaselibrary.Util.LogUtil;
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -37,7 +43,7 @@ public class HttpCilent {
     private static final String BASEURL = "https://api.seniverse.com/v3/weather/";
 
 
-    private static final int TIME_OUT=4;
+    private static final int TIME_OUT = 4;
     private Retrofit retrofit;
     private HttpService apiService;
 
@@ -46,7 +52,7 @@ public class HttpCilent {
          * 构造函数私有化
          * 并在构造函数中进行retrofit的初始化
          */
-        OkHttpClient client=new OkHttpClient();
+        OkHttpClient client = new OkHttpClient();
         client.newBuilder().connectTimeout(TIME_OUT, TimeUnit.SECONDS);
         /**
          * 由于retrofit底层的实现是通过okhttp实现的，所以可以通过okHttp来设置一些连接参数
@@ -58,7 +64,7 @@ public class HttpCilent {
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
-        apiService=retrofit.create(HttpService.class);
+        apiService = retrofit.create(HttpService.class);
     }
 
 
@@ -66,16 +72,23 @@ public class HttpCilent {
         static final HttpCilent instance = new HttpCilent();
     }
 
-    public  static HttpCilent getInstance(){
+    public static HttpCilent getInstance() {
         return sinalInstance.instance;
     }
 
-    public Flowable<WetherBean> getWether(String location, Context context, ProgressDialog dialog) {
-       return apiService.getStudent(key,location)
+    public void getWether(String location, Context context, ProgressDialog dialog) {
+        apiService.getStudent(key, location)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
-                .compose(RxSchedulers.<WetherBean>io_main(context, dialog));
+                .compose(RxSchedulers.<WetherBean>io_main(context))
+                .subscribeWith(new BaseSubscriber<WetherBean>() {
+                    @Override
+                    public void handlerSuccess(WetherBean wetherBean) {
 
+                            EventBus.getDefault().postSticky(wetherBean);
+
+                    }
+                });
     }
 
 }
