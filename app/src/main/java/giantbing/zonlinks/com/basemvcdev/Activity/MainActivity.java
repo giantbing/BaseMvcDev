@@ -9,6 +9,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.concurrent.Callable;
+
 import butterknife.BindView;
 import giantbing.zonlinks.com.basemvcdev.Bean.WetherBean;
 import giantbing.zonlinks.com.basemvcdev.Http.Base.ProgressSubscriber;
@@ -26,8 +28,11 @@ import giantbing.zonlinks.com.giantbaselibrary.View.FloatBubbleView;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import io.reactivex.internal.operators.observable.ObservableJust;
 import io.reactivex.schedulers.Schedulers;
 import tyrantgit.explosionfield.ExplosionField;
 
@@ -85,10 +90,10 @@ public class MainActivity extends AppBaseActivity {
             public void onClick(View view) {
                 // StartActivityHelper.startActivityTraslate(MainActivity.this,WheatherActivity.class, StartActivityHelper.Anmotion.Slide);
                 //AppUtils.uninstallDataAPPBySilent(getApplicationContext(), "com.zonlinks.giantbing.guangzhouboard");
-                unstall("com.zonlinks.giantbing.guangzhouboard");
-                field.explode(view);
-                getWetherData();
-
+                // unstall("com.zonlinks.giantbing.guangzhouboard");
+                //field.explode(view);
+                // getWetherData();
+                testRxjava();
             }
         });
     }
@@ -144,17 +149,17 @@ public class MainActivity extends AppBaseActivity {
                 .subscribe(new Consumer<AppUtils.uninstallEnum>() {
                                @Override
                                public void accept(AppUtils.uninstallEnum aBoolean) throws Exception {
-                                  switch (aBoolean){
-                                      case NOROOT:
-                                          ToastHelper.warning(getApplicationContext(),"没有ROOT权限，尝试手动删除！");
-                                          break;
-                                      case SUCCESS:
-                                          ToastHelper.success(getApplicationContext(),"卸载成功！");
-                                          break;
-                                      case UNKOWPACAGE:
-                                          ToastHelper.warning(getApplicationContext(),"未安装！");
-                                          break;
-                                  }
+                                   switch (aBoolean) {
+                                       case NOROOT:
+                                           ToastHelper.warning(getApplicationContext(), "没有ROOT权限，尝试手动删除！");
+                                           break;
+                                       case SUCCESS:
+                                           ToastHelper.success(getApplicationContext(), "卸载成功！");
+                                           break;
+                                       case UNKOWPACAGE:
+                                           ToastHelper.warning(getApplicationContext(), "未安装！");
+                                           break;
+                                   }
                                }
                            },
                         new Consumer<Throwable>() {
@@ -164,6 +169,25 @@ public class MainActivity extends AppBaseActivity {
                                 LogUtil.e(throwable.toString());
                             }
                         });
+    }
+
+    private void testRxjava() {
+        Object o = new Object();
+        final Observable<String> ob = Observable.just(o.hashCode()+"");
+        ob.subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        Thread.sleep(2000);
+                        LogUtil.e("no1\t" + s);
+                    }
+                });
+        ob.subscribe(new Consumer<String>() {
+            @Override
+            public void accept(String s) throws Exception {
+                LogUtil.e("no2\t" + s);
+            }
+        });
     }
 
 }

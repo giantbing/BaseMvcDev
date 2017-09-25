@@ -182,6 +182,7 @@ public final class AppUtils {
             @Override
             public void subscribe(ObservableEmitter<Boolean> e) throws Exception {
                 e.onNext(checkApplication(context, packageName));
+                e.onComplete();
             }
         })
                 .subscribeOn(Schedulers.computation())
@@ -196,8 +197,10 @@ public final class AppUtils {
                                 public void subscribe(Observer<? super uninstallEnum> observer) {
                                     if (uninstallDataAPPBySilent(context, packageName)) {
                                         observer.onNext(uninstallEnum.SUCCESS);
+                                        observer.onComplete();
                                     } else {
                                         observer.onNext(uninstallEnum.NOROOT);
+                                        observer.onComplete();
                                     }
 
                                 }
@@ -209,6 +212,7 @@ public final class AppUtils {
                                 @Override
                                 public void subscribe(Observer<? super uninstallEnum> observer) {
                                     observer.onNext(uninstallEnum.UNKOWPACAGE);
+                                    observer.onComplete();
                                 }
                             };
                             return source;
