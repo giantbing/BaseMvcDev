@@ -10,6 +10,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import giantbing.zonlinks.com.basemvcdev.Bean.WetherBean;
@@ -173,21 +174,15 @@ public class MainActivity extends AppBaseActivity {
 
     private void testRxjava() {
         Object o = new Object();
-        final Observable<String> ob = Observable.just(o.hashCode()+"");
+        final Observable<Long> ob = Observable.interval(1, TimeUnit.SECONDS);
         ob.subscribeOn(Schedulers.io())
-                .subscribe(new Consumer<String>() {
+                .subscribe(new Consumer<Long>() {
                     @Override
-                    public void accept(String s) throws Exception {
-                        Thread.sleep(2000);
+                    public void accept(Long s) throws Exception {
                         LogUtil.e("no1\t" + s);
                     }
                 });
-        ob.subscribe(new Consumer<String>() {
-            @Override
-            public void accept(String s) throws Exception {
-                LogUtil.e("no2\t" + s);
-            }
-        });
+
     }
 
 }
