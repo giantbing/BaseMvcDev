@@ -1,13 +1,9 @@
-package giantbing.zonlinks.com.basemvcdev.Util;
+package giantbing.zonlinks.com.giantbaselibrary.Util;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.view.View;
-
-import giantbing.zonlinks.com.basemvcdev.Activity.WheatherActivity;
-import giantbing.zonlinks.com.giantbaselibrary.Util.AnimotionHelper;
 
 
 /*

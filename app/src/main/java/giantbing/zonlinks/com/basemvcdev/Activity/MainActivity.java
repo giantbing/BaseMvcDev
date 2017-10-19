@@ -19,7 +19,6 @@ import giantbing.zonlinks.com.basemvcdev.Http.HttpCilent;
 import giantbing.zonlinks.com.basemvcdev.R;
 import giantbing.zonlinks.com.basemvcdev.Event.ActivityEvent;
 import giantbing.zonlinks.com.basemvcdev.Util.AppUtils;
-import giantbing.zonlinks.com.basemvcdev.Util.StartActivityHelper;
 import giantbing.zonlinks.com.giantbaselibrary.Util.ActivityUtil;
 import giantbing.zonlinks.com.giantbaselibrary.Util.AnimotionHelper;
 import giantbing.zonlinks.com.giantbaselibrary.Util.LogUtil;

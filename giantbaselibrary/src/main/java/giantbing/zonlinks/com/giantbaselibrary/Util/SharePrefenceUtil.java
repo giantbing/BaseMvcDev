@@ -11,13 +11,12 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 public class SharePrefenceUtil {
-
-    public static final String CLASSID = "CLASSIDSS";
+    private static final String CLASSID = "CLASSIDSS";
 
     private static SharedPreferences sharedPreferences;
 
 
-    public static SharedPreferences getInstante(Context context) {
+    private static SharedPreferences getInstante(Context context) {
         if (sharedPreferences == null) {
             sharedPreferences = context.getSharedPreferences(context.getPackageName(), MODE_PRIVATE);
         }
