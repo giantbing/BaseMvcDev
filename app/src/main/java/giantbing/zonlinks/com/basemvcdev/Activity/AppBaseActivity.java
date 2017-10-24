@@ -16,13 +16,13 @@ public abstract class AppBaseActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        loadDialog = new ProgressDialog(AppBaseActivity.this,false);
+        loadDialog = new ProgressDialog(AppBaseActivity.this, false);
         super.onCreate(savedInstanceState);
     }
 
     @Override
     protected void onResume() {
-        loadDialog = new ProgressDialog(AppBaseActivity.this,false);
+        loadDialog = new ProgressDialog(AppBaseActivity.this, false);
         super.onResume();
     }
 
@@ -30,5 +30,17 @@ public abstract class AppBaseActivity extends BaseActivity {
     protected void onDestroy() {
         loadDialog = null;
         super.onDestroy();
+    }
+
+    protected void dialogDissmiss() {
+        if (loadDialog != null && loadDialog.isShowing()) {
+            loadDialog.dismiss();
+        }
+    }
+
+    protected void showDialog() {
+        if (loadDialog != null) {
+            loadDialog.show();
+        }
     }
 }

@@ -11,10 +11,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.view.View;
 
 import java.io.File;
 import java.io.IOException;
+
+import giantbing.zonlinks.com.giantbaselibrary.BuildConfig;
 
 /**
  * Created by P on 2017/7/10.
@@ -61,7 +64,7 @@ public class DeviceUtil  {
 
 
     }
-    public static String tackPhoto(String ImgPath,Fragment context){
+    public static String tackPhoto(String ImgPath,Fragment context,int tag){
         //图片名称 时间命名
 //        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
 //        Date date = new Date(System.currentTimeMillis());
@@ -70,9 +73,9 @@ public class DeviceUtil  {
         //File outputImage = new File(Environment.getExternalStorageDirectory(),"test.jpg");
         //存储至DCIM文件夹
         File file = new File(ImgPath);
-         if (!file.exists()) {
-                 file.mkdir();
-             }
+        if (!file.exists()) {
+            file.mkdir();
+        }
         File outputImage = new File(ImgPath,System.currentTimeMillis()+".png");
         try {
             if(outputImage.exists()) {
@@ -83,10 +86,18 @@ public class DeviceUtil  {
             e.printStackTrace();
         }
         //将File对象转换为Uri并启动照相程序
-        Uri imageUri = Uri.fromFile(outputImage);
+
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE"); //照相
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri); //指定图片输出地址
-        context.startActivityForResult(intent,TAKE_PHOTO); //启动照相
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            Uri contentUri = FileProvider.getUriForFile(context.getActivity(), BuildConfig.APPLICATION_ID + ".fileProvider", outputImage);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, contentUri); //指定图片输出地址
+        } else {
+            Uri imageUri = Uri.fromFile(outputImage);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri); //指定图片输出地址
+        }
+
+        context.startActivityForResult(intent,tag); //启动照相
         //拍完照startActivityForResult() 结果返回onActivityResult()函数
         return outputImage.getPath();
     }
